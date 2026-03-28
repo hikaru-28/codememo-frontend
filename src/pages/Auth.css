@@ -1,0 +1,31 @@
+.password-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.password-wrap input {
+    flex: 1;
+}
+
+.password-toggle {
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 12px;
+    background: var(--color-white);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+}
+
+.auth-link {
+    margin-top: 16px;
+    text-align: center;
+    color: var(--color-text-sub);
+}
+
+.auth-link a {
+    color: var(--color-accent);
+    font-weight: 600;
+}

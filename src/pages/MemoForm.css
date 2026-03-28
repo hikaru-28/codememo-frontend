@@ -1,0 +1,50 @@
+.memo-form-page {
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.memo-form-page h1 {
+    margin-bottom: 20px;
+}
+
+.memo-form {
+    background: var(--color-white);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    font-weight: 600;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    background: var(--color-white);
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+.submit-button {
+    border: none;
+    border-radius: 10px;
+    padding: 12px 18px;
+    background: var(--color-primary);
+    color: var(--color-white);
+    font-weight: 700;
+    cursor: pointer;
+}
