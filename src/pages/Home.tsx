@@ -52,6 +52,7 @@ function Home() {
             const { memos, totalPages } = await getAllMemosApi(page, language, searchKeyword);
             setMemos(memos);
             setTotalPages(totalPages);
+            if (totalPages === 0) setCurrentPage(1);
         } catch (error) {
             console.error('メモの取得に失敗しました', error);
         } finally {
@@ -182,7 +183,7 @@ function Home() {
                 <button
                     className="pagination-button"
                     onClick={() => setCurrentPage(prev => prev + 1)}
-                    disabled={currentPage === totalPages}
+                    disabled={currentPage >= totalPages || totalPages === 0}
                 >次</button>
             </div>
         </div>
