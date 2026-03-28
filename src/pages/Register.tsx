@@ -31,7 +31,7 @@ function Register() {
                 console.log('パスワードが一致しません');
                 return;
             }
-            const res = await fetch("http://localhost:5000/api/v1/auth/register", {
+            const res = await fetch(`${import.meta.env.VITE_AUTH_URL}/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
