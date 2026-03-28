@@ -1,16 +1,58 @@
-# React + Vite
+# Code Memo App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+プログラミング学習中にコードスニペットを管理するためのWebアプリです。学習中に「このコードどこに書いたっけ？」という課題を解決するために開発しました。
 
-Currently, two official plugins are available:
+## デモ
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+https://codememo-frontend.vercel.app
 
-## React Compiler
+## 機能
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- ユーザー登録・ログイン・ログアウト（JWT認証）
+- コードメモのCRUD（作成・閲覧・編集・削除）
+- シンタックスハイライト表示
+- 言語タグによる分類・フィルタリング
+- キーワード検索（タイトル・コード・メモを横断検索）
+- ページネーション
+- ユーザーごとのメモ管理
 
-## Expanding the ESLint configuration
+## 技術スタック
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+| カテゴリ | 技術 |
+|---|---|
+| フロントエンド | React / TypeScript / Vite |
+| バックエンド | Node.js / Express / TypeScript |
+| データベース | MongoDB / Mongoose |
+| 認証 | JWT |
+| フロントデプロイ | Vercel |
+| バックエンドデプロイ | Render |
+| DBホスティング | MongoDB Atlas |
+
+バックエンドのリポジトリは[こちら](https://github.com/hikaru-28/codememo-backend)
+
+## 技術選定の理由
+
+**MERNスタック**
+JavaScriptで統一することでフロント・バック間の型定義を共有しやすく、学習コストを抑えながらフルスタック開発の経験を積めると判断しました。
+
+**TypeScript**
+実務でほぼ必須となっているため導入しました。型定義を書くことでAPIのレスポンスやpropsの型安全性が上がり、バグの早期発見につながりました。
+
+**JWT認証**
+サーバー側に状態を持たないステートレスな認証方式のため、スケールしやすくSPAとの相性が良いと判断しました。
+
+## 工夫した点
+
+**バックエンドで検索・フィルタリング・ページネーションを実装**
+
+当初フロントエンドで検索・フィルタリングを実装していましたが、ページネーションと干渉してページをまたいだ検索ができない問題が発生しました。バックエンドのMongoDBクエリに`$regex`・`$or`を使った検索とページネーションをまとめて実装することで解決しました。
+
+**ユーザーごとのメモ管理**
+
+JWTのペイロードに`userId`を含め、認証ミドルウェアで`req.userId`に付与することで、各APIでそのユーザーのデータのみ操作できるようにしました。
+
+## 今後の実装予定
+
+- 実行結果メモの紐付け保存
+- コレクション・フォルダ整理機能
+- 公開・シェア機能
