@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { createMemo as createMemoApi } from '../api/memoApi';
 import { languageOptions, ILanguages } from '../constants/languages';
@@ -26,10 +27,20 @@ function CreateMemo() {
 
     const createMemo = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        if (!title || !code) {
+            toast.error('タイトルとコードを入力してください');
+            return;
+        }
+
+        const toastId = toast.loading('作成中...');
+
         try {
             await createMemoApi(formData);
+            toast.success('新しいメモを作成しました', { id: toastId });
             navigate('/');
         } catch (error) {
+            toast.error('メモの作成に失敗しました', { id: toastId });
             console.log('メモの作成に失敗しました', error);
         };
     };

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import './MemoForm.css';
 import './Auth.css';
@@ -23,6 +24,15 @@ function Login() {
 
     const login = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        // バリデーション
+        if (!email || !password) {
+            toast.error('メールアドレスとパスワードを入力してください');
+            return;
+        }
+
+        const toastId = toast.loading('ログイン中...');
+
         try {
             const res = await fetch(`${import.meta.env.VITE_AUTH_URL}/login`, {
                 method: 'POST',
@@ -34,8 +44,10 @@ function Login() {
             if (!res.ok) throw new Error(`ログインに失敗しました: ${res.status}`);
             const data = await res.json();
             localStorage.setItem('token', data.token);
+            toast.success('ログインしました', { id: toastId });
             navigate('/');
         } catch (error) {
+            toast.error('メールアドレスまたはパスワードが間違っています', { id: toastId });
             console.log('ログインに失敗しました', error);
         };
 

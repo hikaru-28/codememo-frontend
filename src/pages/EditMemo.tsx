@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { toast } from 'react-hot-toast';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getSingleMemo as getSingleMemoApi, updateMemo as updateMemoApi } from '../api/memoApi';
 import { languageOptions } from '../constants/languages.ts';
@@ -48,10 +49,20 @@ function EditMemo() {
     const updateMemo = async (e: React.FormEvent<HTMLFormElement>) => {
         //デフォルトである、フォーム送信の自動リロードを止める
         e.preventDefault();
+
+        if (!title || !code) {
+            toast.error('タイトルとコードを入力してください');
+            return;
+        };
+
+        const toastId = toast.loading('更新中...');
+
         try {
             await updateMemoApi(id, formData);
+            toast.success('メモを更新しました', { id: toastId });
             navigate('/');
         } catch (error) {
+            toast.error('メモの更新に失敗しました', { id: toastId });
             console.log('メモの更新に失敗しました', error);
         }
     };

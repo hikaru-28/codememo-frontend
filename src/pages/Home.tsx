@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { toast } from 'react-hot-toast';
 import MemoCard from '../components/MemoCard';
 import { getAllMemos as getAllMemosApi, deleteMemo as deleteMemoApi } from '../api/memoApi.ts';
 import { IMemo } from '../types/memo';
@@ -88,10 +89,18 @@ function Home() {
 
     const deleteMemo = async (id: string) => {
         if (window.confirm('このメモを削除しますか?')) {
-            await deleteMemoApi(id);
-            await fetchMemos();
+
+            const toastId = toast.loading('削除中...');
+
+            try {
+                await deleteMemoApi(id);
+                await fetchMemos();
+                toast.success('削除に成功しました', { id: toastId });
+            } catch (error) {
+                toast.error('削除に失敗しました', { id: toastId });
+            }
         }
-    }
+    };
 
     const handleSearch = () => {
         setSearchKeyword(searchInput);

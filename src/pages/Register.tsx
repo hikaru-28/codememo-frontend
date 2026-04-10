@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import './MemoForm.css';
 import './Auth.css';
@@ -26,11 +27,23 @@ function Register() {
 
     const register = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        if (!password || !email || !userName) {
+            if (!password) toast.error('パスワードを入力してください');
+            if (!email) toast.error('メールアドレスを入力してください');
+            if (!userName) toast.error('ユーザーネームを入力してください');
+            return;
+        };
+
+        if (password !== confirmPassword) {
+            toast.error('パスワードが一致しません');
+            console.log('パスワードが一致しません');
+            return;
+        }
+
+        const toastId = toast.loading('登録中...');
+
         try {
-            if (password !== confirmPassword) {
-                console.log('パスワードが一致しません');
-                return;
-            }
             const res = await fetch(`${import.meta.env.VITE_AUTH_URL}/register`, {
                 method: 'POST',
                 headers: {
@@ -41,8 +54,10 @@ function Register() {
             if (!res.ok) throw new Error(`ユーザー登録に失敗しました: ${res.status}`);
             const data = await res.json();
             localStorage.setItem('token', data.token);
+            toast.success('登録に成功しました', { id: toastId });
             navigate('/');
         } catch (error) {
+            toast.error('登録に失敗しました', { id: toastId });
             console.log('登録に失敗しました', error);
         };
     };
