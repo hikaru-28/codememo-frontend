@@ -13,8 +13,6 @@ function CreateMemo() {
         language: 'javascript',
         memo: ''
     });
-    const [isExtracting, setIsExtracting] = useState(false);
-    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const { title, code, language, memo } = formData;
     const navigate = useNavigate();
@@ -27,56 +25,6 @@ function CreateMemo() {
         }));
     };
 
-    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-
-        setIsExtracting(true);
-        const toastId = toast.loading('画像からコードを抽出中...');
-
-        try {
-            // Base64に変換
-            const base64Image = await new Promise<string>((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => {
-                    const result = reader.result as string;
-                    // data:image/jpeg;base64, の部分を除去
-                    resolve(result.split(',')[1]);
-                };
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-
-            const token = localStorage.getItem('token');
-            const res = await fetch(`${import.meta.env.VITE_API_URL}/images/extract-code`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({ base64Image }),
-            });
-
-            if (!res.ok) throw new Error('抽出失敗');
-
-            const data = await res.json();
-
-            setFormData((prev) => ({
-                ...prev,
-                code: data.code,
-                language: data.language.toLowerCase() || prev.language,
-            }));
-
-            toast.success('コードを抽出しました', { id: toastId });
-        } catch (error) {
-            toast.error('コードの抽出に失敗しました', { id: toastId });
-            console.log(error);
-        } finally {
-            setIsExtracting(false);
-            // inputをリセット（同じファイルを再度選択できるように）
-            if (fileInputRef.current) fileInputRef.current.value = '';
-        }
-    };
 
     const createMemo = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -129,23 +77,6 @@ function CreateMemo() {
 
                 <div className="form-group">
                     <label>コード</label>
-                    <div className="image-upload-area">
-                        <input
-                            type="file"
-                            accept="image/*"
-                            ref={fileInputRef}
-                            onChange={handleImageUpload}
-                            style={{ display: 'none' }}
-                        />
-                        <button
-                            type="button"
-                            className="image-upload-button"
-                            onClick={() => fileInputRef.current?.click()}
-                            disabled={isExtracting}
-                        >
-                            {isExtracting ? '抽出中...' : '📷 画像からコードを抽出'}
-                        </button>
-                    </div>
                     <textarea
                         name="code"
                         placeholder="コードを入力して下さい..."
