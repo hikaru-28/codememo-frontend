@@ -5,6 +5,7 @@
 ## デモ
 
 https://codememo-frontend.vercel.app
+テストアカウント: email: test@gmail.com / password: test
 
 ## 機能
 
