@@ -54,7 +54,10 @@ function CreateMemo() {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({ base64Image }),
+                body: JSON.stringify({
+                    base64Image,
+                    mimeType: file.type,
+                }),
             });
 
             if (!res.ok) throw new Error('抽出失敗');
